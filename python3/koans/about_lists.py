@@ -56,39 +56,40 @@ class AboutLists(Koan):
         self.assertEqual(range, type(range(5)))
 
         # NOT equal
-        self.assertNotEqual([1, 2, 3, 4, 5], range(1,6))
+        self.assertNotEqual([1, 2, 3, 4, 5], range(1, 6))
 
-        self.assertEqual(__, list(range(5)))
-        self.assertEqual(__, list(range(5, 9)))
+        self.assertEqual([0, 1, 2, 3, 4], list(range(5)))
+        self.assertEqual([5, 6, 7, 8], list(range(5, 9)))
 
     def test_ranges_with_steps(self):
         self.assertEqual([5, 4], list(range(5, 3, -1)))
         self.assertEqual([0, 2, 4, 6], list(range(0, 8, 2)))
         self.assertEqual([1, 4, 7], list(range(1, 8, 3)))
-        self.assertEqual(__, list(range(5, -7, -4)))
-        self.assertEqual(__, list(range(5, -8, -4)))
+        self.assertEqual([5, 1, -3], list(range(5, -7, -4)))
+        self.assertEqual([5, 1, -3, -7], list(range(5, -8, -4)))
 
     def test_insertions(self):
-        knight = ['you', 'shall', 'pass']
-        knight.insert(2, 'not')
-        self.assertEqual(__, knight)
+        gandolf = ['you', 'shall', 'pass']
+        gandolf.insert(2, 'not')
+        toTheBalrog = ['you', 'shall', 'not', 'pass']
+        self.assertEqual(toTheBalrog, gandolf)
 
-        knight.insert(0, 'Arthur')
-        self.assertEqual(__, knight)
+        gandolf.insert(0, 'Arthur')
+        self.assertEqual(['Arthur'] + toTheBalrog, gandolf)
 
     def test_popping_lists(self):
         stack = [10, 20, 30, 40]
         stack.append('last')
 
-        self.assertEqual(__, stack)
+        self.assertEqual([10, 20, 30, 40, 'last'], stack)
 
         popped_value = stack.pop()
-        self.assertEqual(__, popped_value)
-        self.assertEqual(__, stack)
+        self.assertEqual('last', popped_value)
+        self.assertEqual([10, 20, 30, 40], stack)
 
         popped_value = stack.pop(1)
-        self.assertEqual(__, popped_value)
-        self.assertEqual(__, stack)
+        self.assertEqual(20, popped_value)
+        self.assertEqual([10, 30, 40], stack)
 
         # Notice that there is a "pop" but no "push" in python?
 
@@ -102,11 +103,11 @@ class AboutLists(Koan):
         queue = [1, 2]
         queue.append('last')
 
-        self.assertEqual(__, queue)
+        self.assertEqual([1, 2, 'last'], queue)
 
         popped_value = queue.pop(0)
-        self.assertEqual(__, popped_value)
-        self.assertEqual(__, queue)
+        self.assertEqual(1, popped_value)
+        self.assertEqual([2, 'last'], queue)
 
         # Note, popping from the left hand side of a list is
         # inefficient. Use collections.deque instead.
