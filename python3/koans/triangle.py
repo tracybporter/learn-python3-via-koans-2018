@@ -17,6 +17,18 @@
 #   about_triangle_project_2.py
 #
 def triangle(a, b, c):
+    sides = [a, b, c]
+
+    for side in sides:
+        if side <= 0:
+            raise TriangleError()
+
+    longestSide = max(sides)
+    indexOfMax = sides.index(longestSide)
+    sides.pop(indexOfMax)
+    if sum(sides) <= longestSide:
+        raise TriangleError
+
     type = 'scalene'
     countOfUniqueValues = {a, b, c}.__len__()
     if countOfUniqueValues == 1:
