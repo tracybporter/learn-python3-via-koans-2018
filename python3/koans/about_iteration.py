@@ -127,19 +127,12 @@ class AboutIteration(Koan):
         result = map(self.add_ten, range(1, 4))
         self.assertEqual([11, 12, 13], list(result))
 
-        try:
-            file = open("example_file.txt")
+    def test_lines_in_a_file_are_iterable_sequences_too(self):
+        file = open("example_file.txt")
 
-            try:
-                def make_upcase(line):
-                    return line.strip().title()
+        def make_upcase(line):
+            return line.strip().title()
 
-                upcase_lines = map(make_upcase, file.readlines())
-                self.assertEqual(['This', 'Is', 'A', 'Test'], list(upcase_lines))
-            finally:
-                # Arg, this is ugly.
-                # We will figure out how to fix this later.
-                file.close()
-        except IOError:
-            # should never happen
-            self.fail()
+        upcase_lines = map(make_upcase, file.readlines())
+        self.assertEqual(['This', 'Is', 'A', 'Test'], list(upcase_lines))
+        file.close()
