@@ -128,11 +128,10 @@ class AboutIteration(Koan):
         self.assertEqual([11, 12, 13], list(result))
 
     def test_lines_in_a_file_are_iterable_sequences_too(self):
-        file = open("example_file.txt")
-
         def make_upcase(line):
             return line.strip().title()
 
+        file = open("example_file.txt")
         upcase_lines = map(make_upcase, file.readlines())
         self.assertEqual(['This', 'Is', 'A', 'Test'], list(upcase_lines))
         file.close()
