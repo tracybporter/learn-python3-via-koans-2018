@@ -3,55 +3,119 @@
 
 from runner.koan import *
 
+
 def function():
     return "pineapple"
+
 
 def function2():
     return "tractor"
 
-class Class:
+
+class AnyClass:
     def method(self):
         return "parrot"
 
+
 class AboutMethodBindings(Koan):
     def test_methods_are_bound_to_an_object(self):
-        obj = Class()
-        self.assertEqual(__, obj.method.__self__ == obj)
+        obj = AnyClass()
+        self.assertEqual(True, obj.method.__self__ == obj)
 
     def test_methods_are_also_bound_to_a_function(self):
-        obj = Class()
-        self.assertEqual(__, obj.method())
-        self.assertEqual(__, obj.method.__func__(obj))
+        obj = AnyClass()
+        self.assertEqual('parrot', obj.method())
+        self.assertEqual('parrot', obj.method.__func__(obj))
 
     def test_functions_have_attributes(self):
-        obj = Class()
-        self.assertEqual(__, len(dir(function)))
-        self.assertEqual(__, dir(function) == dir(obj.method.__func__))
+        obj = AnyClass()
+        self.assertEqual(['__annotations__',
+                          '__call__',
+                          '__class__',
+                          '__closure__',
+                          '__code__',
+                          '__defaults__',
+                          '__delattr__',
+                          '__dict__',
+                          '__dir__',
+                          '__doc__',
+                          '__eq__',
+                          '__format__',
+                          '__ge__',
+                          '__get__',
+                          '__getattribute__',
+                          '__globals__',
+                          '__gt__',
+                          '__hash__',
+                          '__init__',
+                          '__kwdefaults__',
+                          '__le__',
+                          '__lt__',
+                          '__module__',
+                          '__name__',
+                          '__ne__',
+                          '__new__',
+                          '__qualname__',
+                          '__reduce__',
+                          '__reduce_ex__',
+                          '__repr__',
+                          '__setattr__',
+                          '__sizeof__',
+                          '__str__',
+                          '__subclasshook__'], dir(function))
+        self.assertEqual(34, len(dir(function)))
+        self.assertEqual(True, dir(function) == dir(obj.method.__func__))
 
     def test_methods_have_different_attributes(self):
-        obj = Class()
-        self.assertEqual(__, len(dir(obj.method)))
+        obj = AnyClass()
+        self.assertEqual(['__call__',
+                          '__class__',
+                          '__delattr__',
+                          '__dir__',
+                          '__doc__',
+                          '__eq__',
+                          '__format__',
+                          '__func__',
+                          '__ge__',
+                          '__get__',
+                          '__getattribute__',
+                          '__gt__',
+                          '__hash__',
+                          '__init__',
+                          '__le__',
+                          '__lt__',
+                          '__ne__',
+                          '__new__',
+                          '__reduce__',
+                          '__reduce_ex__',
+                          '__repr__',
+                          '__self__',
+                          '__setattr__',
+                          '__sizeof__',
+                          '__str__',
+                          '__subclasshook__'], dir(obj.method))
+        self.assertEqual(26, len(dir(obj.method)))
 
     def test_setting_attributes_on_an_unbound_function(self):
         function.cherries = 3
-        self.assertEqual(__, function.cherries)
+        self.assertEqual(3, function.cherries)
 
     def test_setting_attributes_on_a_bound_method_directly(self):
-        obj = Class()
-        with self.assertRaises(___): obj.method.cherries = 3
+        obj = AnyClass()
+        with self.assertRaises(AttributeError): obj.method.cherries = 3
 
     def test_setting_attributes_on_methods_by_accessing_the_inner_function(self):
-        obj = Class()
+        obj = AnyClass()
         obj.method.__func__.cherries = 3
-        self.assertEqual(__, obj.method.cherries)
+        self.assertEqual(3, obj.method.cherries)
 
     def test_functions_can_have_inner_functions(self):
         function2.get_fruit = function
-        self.assertEqual(__, function2.get_fruit())
+        self.assertEqual('pineapple', function2.get_fruit())
 
     def test_inner_functions_are_unbound(self):
         function2.get_fruit = function
-        with self.assertRaises(___): cls = function2.get_fruit.__self__
+        with self.assertRaises(AttributeError): cls = function2.get_fruit.__self__
 
     # ------------------------------------------------------------------
 
@@ -62,14 +126,16 @@ class AboutMethodBindings(Koan):
     binding = BoundClass()
 
     def test_get_descriptor_resolves_attribute_binding(self):
+
         bound_obj, binding_owner, owner_type = self.binding
+
         # Look at BoundClass.__get__():
         #   bound_obj = self
         #   binding_owner = obj
         #   owner_type = cls
 
-        self.assertEqual(__, bound_obj.__class__.__name__)
-        self.assertEqual(__, binding_owner.__class__.__name__)
+        self.assertEqual('BoundClass', bound_obj.__class__.__name__)
+        self.assertEqual('AboutMethodBindings', binding_owner.__class__.__name__)
         self.assertEqual(AboutMethodBindings, owner_type)
 
     # ------------------------------------------------------------------
@@ -86,5 +152,4 @@ class AboutMethodBindings(Koan):
     def test_set_descriptor_changes_behavior_of_attribute_assignment(self):
         self.assertEqual(None, self.color.choice)
         self.color = 'purple'
-        self.assertEqual(__, self.color.choice)
-
+        self.assertEqual('purple', self.color.choice)

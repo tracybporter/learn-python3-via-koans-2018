@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import random
+
 from runner.koan import *
 
-import random
 
 class DiceSet:
     def __init__(self):
@@ -16,6 +17,9 @@ class DiceSet:
     def roll(self, n):
         # Needs implementing!
         # Tip: random.randint(min, max) can be used to generate random numbers
+        self._values = list()
+        for roll in range(n):
+            self._values.append(random.randint(1, 6))
         pass
 
 class AboutDiceProject(Koan):
@@ -49,7 +53,7 @@ class AboutDiceProject(Koan):
         second_time = dice.values
 
         self.assertNotEqual(first_time, second_time, \
-            "Two rolls should not be equal")
+                            "Two rolls should not be equal")
 
         # THINK ABOUT IT:
         #
