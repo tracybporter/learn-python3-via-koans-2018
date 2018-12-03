@@ -3,19 +3,22 @@
 
 from runner.koan import *
 
+
 class AboutDeletingObjects(Koan):
     def test_del_can_remove_slices(self):
         lottery_nums = [4, 8, 15, 16, 23, 42]
         del lottery_nums[1]
-        del lottery_nums[2:4]
+        self.assertEqual([4, 15, 16, 23, 42], lottery_nums)
 
-        self.assertEqual(___, lottery_nums)
+        del lottery_nums[2:4]
+        self.assertEqual([4, 15, 42], lottery_nums)
 
     def test_del_can_remove_entire_lists(self):
         lottery_nums = [4, 8, 15, 16, 23, 42]
         del lottery_nums
 
-        with self.assertRaises(___): win = lottery_nums
+        with self.assertRaises(UnboundLocalError): win = lottery_nums
+        with self.assertRaises(NameError): different_error = out_of_the_blue
 
     # ====================================================================
 
@@ -35,21 +38,22 @@ class AboutDeletingObjects(Koan):
 
     def test_del_can_remove_attributes(self):
         crazy_discounts = self.ClosingSale()
-        del self.ClosingSale.toilet_brushes
-        del crazy_discounts.hamsters
 
+        del self.ClosingSale.toilet_brushes
         try:
             still_available = crazy_discounts.toilet_brushes()
         except AttributeError as e:
             err_msg1 = e.args[0]
 
+        self.assertRegex(err_msg1, "object has no attribute 'toilet_brushes'")
+
+        del crazy_discounts.hamsters
         try:
             still_available = crazy_discounts.hamsters
         except AttributeError as e:
             err_msg2 = e.args[0]
 
-        self.assertRegex(err_msg1, __)
-        self.assertRegex(err_msg2, __)
+        self.assertRegex(err_msg2, "object has no attribute 'hamsters'")
 
     # ====================================================================
 
@@ -61,7 +65,7 @@ class AboutDeletingObjects(Koan):
             try:
                 return self._name
             except:
-                return "The man with no name"
+                return "No name available"
 
         def set_name(self, name):
             self._name = name
@@ -70,7 +74,7 @@ class AboutDeletingObjects(Koan):
             del self._name
 
         name = property(get_name, set_name, del_name, \
-            "Mr Eastwood's current alias")
+                        "Mr Eastwood's current alias")
 
     def test_del_works_with_properties(self):
         cowboy = self.ClintEastwood()
@@ -78,8 +82,7 @@ class AboutDeletingObjects(Koan):
         self.assertEqual('Senor Ninguno', cowboy.name)
 
         del cowboy.name
-        self.assertEqual(__, cowboy.name)
-
+        self.assertEqual('No name available', cowboy.name)
 
     # ====================================================================
 
@@ -97,7 +100,7 @@ class AboutDeletingObjects(Koan):
 
         @name.deleter
         def name(self):
-            self._name = 'Number Six'
+            self._name = 'Almost like a fallback'
 
     def test_another_way_to_make_a_deletable_property(self):
         citizen = self.Prisoner()
@@ -105,7 +108,7 @@ class AboutDeletingObjects(Koan):
         self.assertEqual('Patrick', citizen.name)
 
         del citizen.name
-        self.assertEqual(__, citizen.name)
+        self.assertEqual('Almost like a fallback', citizen.name)
 
     # ====================================================================
 
@@ -119,6 +122,6 @@ class AboutDeletingObjects(Koan):
 
     def tests_del_can_be_overriden(self):
         sale = self.MoreOrganisedClosingSale()
-        self.assertEqual(__, sale.jellies())
+        self.assertEqual(5, sale.jellies())
         del sale.jellies
-        self.assertEqual(__, sale.last_deletion)
+        self.assertEqual('jellies', sale.last_deletion)
